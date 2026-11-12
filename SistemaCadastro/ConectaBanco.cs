@@ -24,7 +24,7 @@ namespace SistemaCadastro
                 cmd.Parameters.AddWithValue("integrantes", novaBanda.Integrantes);
                 cmd.Parameters.AddWithValue("ranking", novaBanda.Ranking);
                 cmd.Parameters.AddWithValue("genero", novaBanda.Genero);
-                cmd.ExecuteNonQuery();//executar no banco
+                cmd.ExecuteNonQuery();
                 return true;
             }
             catch (MySqlException erro)
@@ -34,6 +34,74 @@ namespace SistemaCadastro
             }
 
         }
+        public DataTable listaGeneros()
+        {
+            MySqlCommand cmd = new MySqlCommand("sp_listaGeneros", conexao);
+            cmd.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                conexao.Open();
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                DataTable tabela = new DataTable();
+                da.Fill(tabela);
+                return tabela;
+            }// fim try
+            catch (MySqlException e)
+            {
+                mensagem = "Erro:" + e.Message;
+                return null;
+            }
+            finally
+            {
+                conexao.Close();
+            }
+
+        }
+        public DataTable listaBandas()
+        {
+            MySqlCommand cmd = new MySqlCommand("sp_listaBandas", conexao);
+            cmd.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                conexao.Open();
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                DataTable tabela = new DataTable();
+                da.Fill(tabela);
+                return tabela;
+            }// fim try
+            catch (MySqlException e)
+            {
+                mensagem = "Erro:" + e.Message;
+                return null;
+            }
+            finally
+            {
+                conexao.Close();
+            }
+
+        }
+        public bool deletaBanda(int idRemovebanda)
+        {
+            MySqlCommand cmd = new MySqlCommand("sp_removeBanda", conexao);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("idbanda", idRemovebanda);
+            try
+            {
+                conexao.Open();
+                cmd.ExecuteNonQuery(); // executa o comando
+                return true;
+            }
+            catch (MySqlException e)
+            {
+                mensagem = "Erro:" + e.Message;
+                return false;
+            }
+            finally
+            {
+                conexao.Close();
+            }
+        }
+
 
     }
 }
